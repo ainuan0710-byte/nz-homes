@@ -41,6 +41,19 @@ body.with-housing gmp-map-3d,body.with-housing #map{right:var(--panel-width);wid
 .belmont2-card{border-left:5px solid #00b4d8;background:#f8fdff}
 .belmont2-card.selected{border:2px solid #00b4d8;background:#f0faff}
 .belmont2-card .home-source{color:#0077b6;font-weight:800}
+.toppick-banner{margin:16px 16px 0;padding:16px 18px;border:2px solid #f59f00;border-left:6px solid #e67700;background:linear-gradient(135deg,#fff9db 0%,#fffdf2 100%);border-radius:12px;box-shadow:0 3px 10px rgba(230,119,0,.14)}
+.toppick-banner.selected{border:2.5px solid #d9480f;box-shadow:0 4px 14px rgba(217,72,15,.22)}
+.toppick-banner .eyebrow{color:#b45309;opacity:1;font-size:10.5px}
+.toppick-banner h2{font-size:17px;margin:6px 0;color:#7c2d12}
+.toppick-banner p{font-size:11.5px;line-height:1.65;color:#451a03;margin:5px 0 11px}
+.toppick-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.toppick-actions button{border:0;border-radius:6px;background:#e67700;color:#fff;padding:7px 10px;cursor:pointer;font-size:11px;font-weight:700}
+.toppick-actions button.btn-sv{background:#0f1c30}
+.toppick-actions a{font-size:10.5px;color:#b45309;font-weight:700;margin-left:4px;text-decoration:none}
+.toppick-card{border:2px solid #f59f00;border-left:6px solid #e67700;background:#fffdf4}
+.toppick-card.selected{border:2.5px solid #d9480f;background:#fff9db}
+.toppick-card .home-source{color:#b45309;font-weight:800}
+.toppick-card .home-status.current{background:#fff3bf;color:#b45309;font-weight:800}
 .home-actions button.btn-sv{background:#0f1c30;color:#fff;font-weight:700}
 .home-actions button.btn-sv:hover{background:#1e3a5f}
 .krw-inline{font-size:13.5px;font-weight:700;color:#0f4c75;letter-spacing:-0.3px}

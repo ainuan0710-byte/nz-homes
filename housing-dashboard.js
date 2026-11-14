@@ -39,11 +39,21 @@
     const takaCount = homes.filter(h=>h.sourceType==='takapuna').length;
     const z2aCount = homes.filter(h=>h.sourceType==='zone2a').length;
     const z2bCount = homes.filter(h=>h.sourceType==='zone2b').length;
-    const filtered = homes.filter(h=>(filter==='all'||saved.has(h.id))&&(sourceFilter==='all'||h.sourceType===sourceFilter||(sourceFilter==='zone1_all'&&(h.sourceType==='belmont2'||h.sourceType==='zone1'))));
-    const sampleWeekly = toKrwMan(850);
-    const sampleMonthly = toKrwMan(Math.round(850*52/12));
+    const filtered = homes.filter(h=>(filter==='all'||saved.has(h.id))&&(sourceFilter==='all'||(sourceFilter==='toppick'&&h.isTopPick)||h.sourceType===sourceFilter||(sourceFilter==='zone1_all'&&(h.sourceType==='belmont2'||h.sourceType==='zone1'))));
+    const topPickWeekly = toKrwMan(750);
+    const topPickMonthly = toKrwMan(Math.round(750*52/12));
 
-    aside.innerHTML=`<header class="housing-head"><button type="button" class="housing-close" aria-label="뉴질랜드 대시보드 접기">접기 ×</button><div class="eyebrow">NEW ZEALAND · BELMONT &amp; TAKAPUNA</div><h1>학교 가까이, 우리 집.</h1><p>벨몬트 2차 알짜 매물은 <b>🩵 하늘색 핀('벨')</b>으로 표시했습니다. 모든 금액에 <b>NZ$ + 한화(₩)</b>, 모든 면적에 <b>㎡ + 평수(평)</b>를 병기합니다.</p><div class="housing-stats"><div><b>${homes.length}</b><span>현재 공고</span></div><div><b>${b2Count} / ${takaCount}</b><span>벨몬트2차 / 타카푸나</span></div><div><b>${saved.size}</b><span>관심 후보</span></div></div></header>
+    aside.innerHTML=`<header class="housing-head"><button type="button" class="housing-close" aria-label="뉴질랜드 대시보드 접기">접기 ×</button><div class="eyebrow">NEW ZEALAND · BELMONT &amp; TAKAPUNA</div><h1>학교 가까이, 우리 집.</h1><p>👑 정이사님 원픽 1순위는 <b>207/28 Killarney St (Lakeview 2층 · 주 NZ$750 / 약 55.4만 원 · 80㎡ / 약 24.2평)</b>입니다. 모든 금액에 <b>NZ$ + 한화(₩)</b>, 모든 면적에 <b>㎡ + 평수(평)</b>를 병기합니다.</p><div class="housing-stats"><div><b>${homes.length}</b><span>현재 공고</span></div><div><b>${b2Count} / ${takaCount}</b><span>벨몬트2차 / 타카푸나</span></div><div><b>${saved.size}</b><span>관심 후보</span></div></div></header>
+    <section class="toppick-banner ${confirmedPlace==='h29'?'selected':''}">
+      <div class="eyebrow">👑 정이사님 지정 원픽 1순위 (황금 핀 '★') · 2026-12-29 입주</div>
+      <h2>207/28 Killarney Street, Takapuna</h2>
+      <p><b>주 NZ$750 (약 ${topPickWeekly.man}만 원 · 월 약 ${topPickMonthly.man}만 원)</b> · <b>80㎡ (약 24.2평)</b> · 침실2·욕실2·지하보안주차1<br>2019년 준공 Lakeview 2층(엄마+초등2명 안전·사생활 최우수) · 호수공원(Killarney Park) 바로 앞</p>
+      <div class="toppick-actions">
+        <button type="button" data-focus="h29">👑 원픽 3D 위치 보기</button>
+        <button type="button" data-sv="h29" class="btn-sv">원픽 앞 로드뷰</button>
+        <a href="https://www.trademe.co.nz/a/property/residential/rent/auckland/north-shore-city/takapuna/listing/6224609815" target="_blank" rel="noopener">Trade Me 공고 원문 ↗</a>
+      </div>
+    </section>
     <section class="school-card ${confirmedPlace==='nz-school'?'selected':''}"><div class="eyebrow">🟢 기준점 (초록 핀 '학') · 국제학생 학군 무관</div><h2>Belmont Primary School</h2><p>3A Harrison Avenue, Belmont, Auckland</p><button type="button" data-school>3D 학교 보기</button><button type="button" data-school-sv style="margin-left:6px;background:#0f1c30">학교 앞 로드뷰</button><a href="https://www.google.com/maps/search/?api=1&query=Belmont+Primary+School,+3A+Harrison+Avenue,+Auckland" target="_blank" rel="noopener">구글 지도 ↗</a><p class="school-feedback" role="status" aria-live="polite">${confirmedPlace==='nz-school'?'학교 핀과 상세 정보를 지도에 표시했습니다.':''}</p></section>
     <section class="westgate-card"><div class="eyebrow">🩵 가족 생활권 (청록 핀 '가')</div><h2>웨스트게이트 <small>Westgate</small></h2><p>아내분 사촌동생 거주 지역 · 학교에서 차로 <b>약 21분 (23.7km · SH18 경유)</b></p><div><button type="button" data-westgate>웨스트게이트 위치</button><button type="button" data-nz-overview>학교와 한눈에 보기</button></div></section>
     <section class="portal-card">
@@ -71,19 +81,20 @@
         </div>
       </div>
       <details class="criteria-box">
-        <summary>유학원 샘플01(주 NZ$850·약 ${sampleWeekly.man}만 원 / 96㎡·약 29.0평) 대비 5대 비교 기준</summary>
+        <summary>👑 원픽(207/28 Killarney St · 주 NZ$750 / 80㎡·24.2평) 대비 5대 비교 기준</summary>
         <ol>
-          <li><b>실질 월 비용</b>: 유학원 샘플01 주 NZ$850(약 ${sampleWeekly.man}만 원 · 월 NZ$3,683 / 약 ${sampleMonthly.man}만 원) vs 직접 탐색 매물 주 NZ$580~995(약 42.9만~73.5만 원)</li>
-          <li><b>전용면적(㎡·평수) 대비 가성비</b>: 샘플01은 96㎡(약 29.0평·침실2)인 반면, 벨몬트·타카푸나 직접 매물은 100~207㎡(약 30.3~62.6평·침실3~4) 대형 매물도 선택 가능</li>
-          <li><b>통학 및 Westgate 동선</b>: 권역1(도보 5~15분) vs 타카푸나·하우라키(차량 5~8분 픽업/드롭 + 쇼핑몰·마트·SH1/SH18 고속도로 진입 최우수)</li>
-          <li><b>계약 조건</b>: 12월 중순~하순 입주 매물(12/7, 12/9, 12/13, 12/16, 12/17, 12/18, 12/19, 12/23, 12/29) 다수 확보 완료</li>
-          <li><b>로드뷰 현장 검증</b>: 집 앞 골목 폭, 노상 주차 여유, 학교까지 인도 연결 상태 확인</li>
+          <li><b>실질 월 비용</b>: 원픽 주 NZ$750(약 ${topPickWeekly.man}만 원 · 월 NZ$3,250 / 약 ${topPickMonthly.man}만 원) · 유학원 샘플01(주 NZ$850) 대비 매주 NZ$100(약 7.4만 원) 절감</li>
+          <li><b>전용면적(㎡·평수) 대비 가성비</b>: 원픽은 80㎡(약 24.2평·침실2·욕실2·2층 보안층)이며, 더 넓은 마당·침실3~4가 필요할 경우 100~207㎡(약 30.3~62.6평) 매물과 비교</li>
+          <li><b>통학 및 Westgate 동선</b>: 원픽(타카푸나 호수공원 앞 · 학교 차량 6분 · SH1/SH18 고속도로 진입 2분) vs 벨몬트 권역1(학교 도보 5~15분)</li>
+          <li><b>계약 조건</b>: 원픽 입주일(12/29)을 기준으로 12월 중순~하순 입주 매물(12/7, 12/9, 12/13, 12/16, 12/17, 12/18, 12/19, 12/23) 상시 추적</li>
+          <li><b>로드뷰 현장 검증</b>: 아파트 출입 보안, 층수(2층 이상 선호), 공원·상권 도보 동선 및 주차 편의성 확인</li>
         </ol>
       </details>
     </section>
     <div class="housing-toolbar"><b>현재 공고 매물 (${filtered.length}건)</b><div><button data-filter="all" class="${filter==='all'?'active':''}">전체</button><button data-filter="saved" class="${filter==='saved'?'active':''}">관심 ★</button></div></div>
     <label class="source-filter">핀 색상·권역별 보기<select aria-label="매물 출처" id="housing-source">
       <option value="all" ${sourceFilter==='all'?'selected':''}>전체 현재 공고 (${homes.length})</option>
+      <option value="toppick" ${sourceFilter==='toppick'?'selected':''}>👑 정이사님 원픽 1순위 · 황금 핀 '★' (1)</option>
       <option value="belmont2" ${sourceFilter==='belmont2'?'selected':''}>🩵 벨몬트 2차 알짜 · 하늘색 핀 '벨' (${b2Count})</option>
       <option value="edusky" ${sourceFilter==='edusky'?'selected':''}>🩷 유학원 샘플01 · 분홍 핀 '유' (1)</option>
       <option value="zone1" ${sourceFilter==='zone1'?'selected':''}>🔵 권역1 1차 (벨몬트·베이스워터) · 파란 핀 '1' (${z1Count})</option>
@@ -94,12 +105,12 @@
       const d=distance(h),dm=d===null?'좌표 확인 중':`학교 중심까지 직선 ${d<1000?Math.round(d)+'m':(d/1000).toFixed(2)+'km'}`;
       const weekly=Number(h.weeklyRent),monthly=Math.round(weekly*52/12);
       const wKrw = toKrwMan(weekly), mKrw = toKrwMan(monthly);
-      const diff = weekly - 850;
+      const diff = weekly - 750;
       const diffKrw = toKrwMan(Math.abs(diff));
-      const diffText = h.id === 'h07' ? '유학원 기준점' : (diff < 0 ? `샘플01 대비 주 -NZ$${Math.abs(diff)} (-약 ${diffKrw.man}만 원)` : diff === 0 ? '샘플01과 주세 동일' : `샘플01 대비 주 +NZ$${diff} (+약 ${diffKrw.man}만 원)`);
+      const diffText = h.isTopPick ? '👑 정이사님 원픽 1순위 기준점' : (diff < 0 ? `원픽(NZ$750) 대비 주 -NZ$${Math.abs(diff)} (-약 ${diffKrw.man}만 원)` : diff === 0 ? '원픽(NZ$750)과 주세 동일' : `원픽(NZ$750) 대비 주 +NZ$${diff} (+약 ${diffKrw.man}만 원)`);
       const areaLabel = toAreaPyeong(h);
-      const badgeClass = h.sourceType === 'edusky' ? 'agency-card' : h.sourceType === 'belmont2' ? 'belmont2-card' : h.sourceType === 'zone1' ? 'zone1-card' : h.sourceType === 'takapuna' ? 'taka-card' : 'zone2-card';
-      const pinBadge = h.sourceType === 'edusky' ? '🩷 하늘/분홍핀 [유]' : h.sourceType === 'belmont2' ? '🩵 하늘색핀 [벨]' : h.sourceType === 'zone1' ? '🔵 파란핀 [1]' : h.sourceType === 'takapuna' ? '🟣 보라핀 [타]' : '🟠 주황핀 [2]';
+      const badgeClass = h.isTopPick ? 'toppick-card' : h.sourceType === 'edusky' ? 'agency-card' : h.sourceType === 'belmont2' ? 'belmont2-card' : h.sourceType === 'zone1' ? 'zone1-card' : h.sourceType === 'takapuna' ? 'taka-card' : 'zone2-card';
+      const pinBadge = h.isTopPick ? '👑 원픽 1순위 [★]' : h.sourceType === 'edusky' ? '🩷 유학원샘플 [유]' : h.sourceType === 'belmont2' ? '🩵 하늘색핀 [벨]' : h.sourceType === 'zone1' ? '🔵 파란핀 [1]' : h.sourceType === 'takapuna' ? '🟣 보라핀 [타]' : '🟠 주황핀 [2]';
       return `<article class="home-card ${badgeClass} ${selected===h.id?'selected':''}"><div class="home-top"><span class="home-status current">${pinBadge} · 현재 공고</span><button class="save-home" data-save="${esc(h.id)}" aria-label="${esc(h.title)} 관심 후보 ${saved.has(h.id)?'해제':'저장'}" aria-pressed="${saved.has(h.id)}">${saved.has(h.id)?'★':'☆'}</button></div><p class="home-source">${esc(h.sourceLabel)}</p><button class="home-name" data-focus="${esc(h.id)}">${esc(h.title)}</button><div class="home-price">NZ$${weekly.toLocaleString()} <span class="krw-inline">(약 ${wKrw.man}만 원 · ₩${wKrw.krw.toLocaleString()})</span><small> / 주</small></div><div class="home-diff ${diff<0?'save':'more'}">${esc(diffText)}</div><div class="home-month">월 환산 <b>NZ$${monthly.toLocaleString()} (약 ${mKrw.man}만 원 · ₩${mKrw.krw.toLocaleString()})</b> · 주세×52÷12</div><div class="home-facts"><span class="area-badge">📐 ${esc(areaLabel)}</span><span>침실 ${esc(h.bedrooms)}</span>${h.bathrooms?`<span>욕실 ${esc(h.bathrooms)}</span>`:''}${h.parking!==undefined?`<span>주차 ${esc(h.parking)}</span>`:''}<span>${esc(h.areaNote||'')}</span></div><p class="home-distance">${dm} ${h.areaSource?`· <small>${esc(h.areaSource)}</small>`:''}</p>${h.walking?`<p class="home-walk">도보 ${esc(h.walking.distance)} · 약 ${esc(h.walking.minutes)}분<small>Google 지도 · ${esc(h.walking.verifiedAt)} 확인</small></p>`:''}<p class="home-review">${esc(h.reviewStatus)}</p>${h.locationNote?`<p class="home-location">${esc(h.locationNote)}</p>`:''}<div class="home-actions"><button data-focus="${esc(h.id)}">3D 핀 이동</button><button data-sv="${esc(h.id)}" class="btn-sv">로드뷰 보기</button><a href="${esc(h.url)}" target="_blank" rel="noopener">원문 ↗</a><a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(h.title+', Auckland, New Zealand')}&destination=${encodeURIComponent('Belmont Primary School, 3A Harrison Avenue, Auckland')}&travelmode=driving" target="_blank" rel="noopener">차량 경로 ↗</a><a href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(h.title+', Auckland, New Zealand')}&destination=${encodeURIComponent('Belmont Primary School, 3A Harrison Avenue, Auckland')}&travelmode=walking" target="_blank" rel="noopener">도보 경로 ↗</a></div></article>`;
     }).join('')||'<p class="housing-empty">선택한 조건에 맞는 후보가 없습니다.</p>'}</div>
     <footer class="housing-foot">자료 업데이트 2026.11.15 · 현재 공고 28건 (벨몬트·베이스워터 10 + 타카푸나 11 + 하우라키 3 + 데본포트 3 + 유학원 1)<br>환율 기준 1 NZ$ ≈ ₩${rate} · 평수 환산 1평 = 3.3058㎡</footer>`;

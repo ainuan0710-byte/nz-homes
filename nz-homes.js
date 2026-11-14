@@ -3,6 +3,34 @@ window.NZD_TO_KRW = 739; // 2026-11-15 기준 1 NZD ≈ 739원
 
 window.NZ_HOMES = [
   // =========================================================================
+  // [★] 정이사님 원픽 (1순위 기준점 · Lakeview Apartments 2층 · 12/29 입주)
+  // =========================================================================
+  {
+    "id": "h29",
+    "title": "207/28 Killarney Street, Takapuna",
+    "weeklyRent": 750,
+    "bondNzd": 3000,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "parking": 1,
+    "area": 80,
+    "areaSource": "Lakeview 복합단지(2019년 준공) 2베드/2욕실 약 80㎡",
+    "areaNote": "👑 원픽 1순위 · 2층 보안층 · 12/29 입주 · 호수공원 앞",
+    "lat": -36.7873108,
+    "lng": 174.7665732,
+    "coordinateSource": "OpenStreetMap Nominatim (28 Killarney St) · 2026-11-15",
+    "locationNote": "👑 정이사님 원픽 1순위 · 타카푸나 호수(Lake Pupuke)·Killarney 공원 정면 맞은편",
+    "currentListing": true,
+    "shortlisted": true,
+    "isTopPick": true,
+    "url": "https://www.trademe.co.nz/a/property/residential/rent/auckland/north-shore-city/takapuna/listing/6224609815",
+    "sourceType": "takapuna",
+    "sourceLabel": "👑 정이사님 원픽 1순위 · Lakeview 2층 · Trade Me #6224609815",
+    "reviewStatus": "주 NZ$750(약 55.4만 원) · 침실2·욕실2·지하보안주차1 · 약 80㎡(약 24.2평) · 2019년 준공 현대식 아파트 2층(보안·사생활 우수) · 호수공원 바로 앞 · 2026-12-29 입주 가능(연말 입국 일정 완벽 부합).",
+    "availability": "Available Tue, 29 Dec"
+  },
+
+  // =========================================================================
   // [0] 유학원 기준점 (1건)
   // =========================================================================
   {
@@ -409,29 +437,6 @@ window.NZ_HOMES = [
     "sourceLabel": "타카푸나 권역 신규 · Trade Me #6178993845",
     "reviewStatus": "주 NZ$730(약 53.9만 원) · 침실2·욕실2 · 약 74㎡(약 22.4평) · 즉시 입주 가능 · 깔끔한 현대식 아파트 선호 시 적합.",
     "availability": "Available Now"
-  },
-  {
-    "id": "h29",
-    "title": "207/28 Killarney Street, Takapuna",
-    "weeklyRent": 750,
-    "bondNzd": 3000,
-    "bedrooms": 2,
-    "bathrooms": 2,
-    "parking": 1,
-    "area": 80,
-    "areaSource": "Lakeview 복합단지 2베드/2욕실 약 80㎡ 추정",
-    "areaNote": "침실2·욕실2·주차1 · 12/29 입주 · 호수공원 앞",
-    "lat": -36.7873108,
-    "lng": 174.7665732,
-    "coordinateSource": "OpenStreetMap Nominatim (28 Killarney St) · 2026-11-15",
-    "locationNote": "타카푸나 호수(Lake Pupuke)·Killarney 공원 바로 맞은편",
-    "currentListing": true,
-    "shortlisted": false,
-    "url": "https://www.trademe.co.nz/a/property/residential/rent/auckland/north-shore-city/takapuna/listing/6224609815",
-    "sourceType": "takapuna",
-    "sourceLabel": "타카푸나 권역 신규 · Trade Me #6224609815",
-    "reviewStatus": "주 NZ$750(약 55.4만 원) · 침실2·욕실2·주차1 · 약 80㎡(약 24.2평 추정) · 2026-12-29 입주 가능(연말 입국 일정과 정확히 부합).",
-    "availability": "Available Tue, 29 Dec"
   },
   {
     "id": "h30",

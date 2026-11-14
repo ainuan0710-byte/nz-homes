@@ -52,16 +52,17 @@ const nzBasePlaces = [
 const nzPlaces = [
   ...nzBasePlaces,
   ...(window.NZ_HOMES || []).filter(h => h.currentListing && Number.isFinite(h.lat) && Number.isFinite(h.lng)).map(h => {
+    const isTopPick = Boolean(h.isTopPick);
     const isEdusky = h.sourceType === 'edusky';
     const isBelmont2 = h.sourceType === 'belmont2';
     const isZone1 = h.sourceType === 'zone1';
     const isTakapuna = h.sourceType === 'takapuna';
-    const color = isEdusky ? '#d6336c' : isBelmont2 ? '#00b4d8' : isZone1 ? '#1971c2' : isTakapuna ? '#7048e8' : '#e8590c';
-    const glyph = isEdusky ? '유' : isBelmont2 ? '벨' : isZone1 ? '1' : isTakapuna ? '타' : '2';
+    const color = isTopPick ? '#e67700' : isEdusky ? '#d6336c' : isBelmont2 ? '#00b4d8' : isZone1 ? '#1971c2' : isTakapuna ? '#7048e8' : '#e8590c';
+    const glyph = isTopPick ? '★' : isEdusky ? '유' : isBelmont2 ? '벨' : isZone1 ? '1' : isTakapuna ? '타' : '2';
     const monthlyNzd = Math.round(h.weeklyRent * 52 / 12);
-    const diff = h.weeklyRent - 850;
+    const diff = h.weeklyRent - 750;
     const diffKrwMan = Math.round(Math.abs(diff) * rateKrw / 1000) / 10;
-    const diffStr = h.id === 'h07' ? '유학원 기준점' : (diff < 0 ? `샘플01 대비 주 -NZ$${Math.abs(diff)} (-약 ${diffKrwMan}만 원)` : diff === 0 ? '샘플01과 주세 동일' : `샘플01 대비 주 +NZ$${diff} (+약 ${diffKrwMan}만 원)`);
+    const diffStr = h.isTopPick ? '👑 정이사님 원픽 1순위 기준점 (주 NZ$750 · 약 55.4만 원)' : (diff < 0 ? `원픽(NZ$750) 대비 주 -NZ$${Math.abs(diff)} (-약 ${diffKrwMan}만 원)` : diff === 0 ? '원픽(NZ$750)과 주세 동일' : `원픽(NZ$750) 대비 주 +NZ$${diff} (+약 ${diffKrwMan}만 원)`);
     const areaStr = fmtAreaPyeong(h);
     return {
       id: h.id,
