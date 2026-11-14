@@ -18,7 +18,7 @@
   .bar button.on { background: #143c4d; color: #fff; border-color: #143c4d; }
   .legend { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 6px; font-size: 11px; color: #334155; align-items: center; }
   .legend i { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; color: #fff; font-style: normal; font-size: 9.5px; font-weight: 700; margin-right: 2px; }
-  .pin-marker { width: 24px; height: 24px; border-radius: 50%; border: 2.5px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.45); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 800; }
+  .pin-marker { width: 26px; height: 26px; border-radius: 50%; border: 2.5px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,.55); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11.5px; font-weight: 800; }
   .maplibregl-popup-content { font-size: 12.5px; max-width: 300px; border-radius: 10px; padding: 12px; }
   .maplibregl-popup-content h3 { margin: 0 0 5px; font-size: 14px; color: #0f172a; }
   .maplibregl-popup-content table { border-collapse: collapse; width: 100%; }
@@ -36,7 +36,7 @@
 <div id="map"></div>
 <div class="bar">
   <b>뉴질랜드 우리 집 비교 (28건)</b><br>
-  <button id="btn-nz" class="on">벨몬트(학교)</button><button id="btn-takapuna">타카푸나</button><button id="btn-westgate">웨스트게이트</button><button id="btn-photo" class="on">위성사진</button>
+  <button id="btn-nz" class="on">벨몬트(학교)</button><button id="btn-takapuna">타카푸나</button><button id="btn-westgate">웨스트게이트</button><button id="btn-photo" class="on">위성사진</button><button id="btn-bldg">3D윤곽</button>
   <div class="legend">
     <span><i style="background:#2f9e44">학</i>학교</span>
     <span><i style="background:#00b4d8">벨</i>벨몬트2차(5)</span>
@@ -63,6 +63,7 @@ map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-
 
 const placeMarkers = new Map();
 let photo = true;
+let showBldg = false;
 
 map.on('load', () => {
   const layers = map.getStyle().layers;
@@ -74,17 +75,21 @@ map.on('load', () => {
         'fill-extrusion-color': '#d9d4cc',
         'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 8],
         'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
-        'fill-extrusion-opacity': 0.35
+        'fill-extrusion-opacity': 0.25
       }
     }, labelId);
   }
   map.addSource('photo-world', {
     type: 'raster', tileSize: 256,
-    tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-    attribution: '항공사진 © Esri, Maxar'
+    tiles: ['https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'],
+    maxzoom: 21,
+    attribution: '위성사진 © Google'
   });
   map.addLayer({ id: 'photo-world', type: 'raster', source: 'photo-world', layout: { visibility: 'visible' } });
-  map.getStyle().layers.filter(l => l.type === 'fill-extrusion' || l.type === 'symbol').forEach(l => map.moveLayer(l.id));
+  // 위성사진 모드에서는 회색 3D 블록(building, building-3d 등)이 실제 지붕을 가리지 않도록 숨기고 도로명·지명(symbol)만 위에 표시
+  const isBldg = l => l.type === 'fill-extrusion' || (l.id && l.id.includes('building'));
+  map.getStyle().layers.filter(isBldg).forEach(l => map.setLayoutProperty(l.id, 'visibility', 'none'));
+  map.getStyle().layers.filter(l => l.type === 'symbol').forEach(l => map.moveLayer(l.id));
 
   for (const p of nzPlaces) {
     const el = document.createElement('div');
@@ -115,7 +120,28 @@ document.getElementById('btn-photo').onclick = () => {
   photo = !photo;
   document.getElementById('btn-photo').classList.toggle('on', photo);
   map.setLayoutProperty('photo-world', 'visibility', photo ? 'visible' : 'none');
-  map.setPaintProperty('eh-building-3d', 'fill-extrusion-opacity', photo ? 0.35 : 0.85);
+  if (!photo) {
+    showBldg = true;
+    document.getElementById('btn-bldg').classList.add('on');
+    map.getStyle().layers.filter(l => l.type === 'fill-extrusion').forEach(l => {
+      map.setLayoutProperty(l.id, 'visibility', 'visible');
+      map.setPaintProperty(l.id, 'fill-extrusion-opacity', 0.85);
+    });
+  } else {
+    showBldg = false;
+    document.getElementById('btn-bldg').classList.remove('on');
+    map.getStyle().layers.filter(l => l.type === 'fill-extrusion').forEach(l => map.setLayoutProperty(l.id, 'visibility', 'none'));
+  }
+};
+document.getElementById('btn-bldg').onclick = () => {
+  showBldg = !showBldg;
+  document.getElementById('btn-bldg').classList.toggle('on', showBldg);
+  map.getStyle().layers.filter(l => l.type === 'fill-extrusion').forEach(l => {
+    map.setLayoutProperty(l.id, 'visibility', showBldg ? 'visible' : 'none');
+    map.setPaintProperty(l.id, 'fill-extrusion-opacity', photo ? 0.22 : 0.85);
+    if (showBldg) map.moveLayer(l.id);
+  });
+  map.getStyle().layers.filter(l => l.type === 'symbol').forEach(l => map.moveLayer(l.id));
 };
 
 window.addEventListener('eh-focus-place', e => {
