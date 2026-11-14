@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>뉴질랜드 우리 집 비교 대시보드 (벨몬트·타카푸나 28건)</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="nz-homes.js"></script>
+<script src="nz-places.js"></script>
+<link rel="stylesheet" href="housing-dashboard.css">
+<style>
+  html, body { margin: 0; height: 100%; font-family: "Malgun Gothic", -apple-system, sans-serif; overflow: hidden; }
+  #map { position: absolute; inset: 0; }
+  .bar { position: absolute; top: 10px; left: 10px; z-index: 2; background: rgba(255,255,255,0.96); border-radius: 10px;
+         box-shadow: 0 2px 10px rgba(0,0,0,.22); padding: 9px 11px; font-size: 12.5px; max-width: 340px; backdrop-filter: blur(4px); }
+  .bar button { margin: 4px 3px 0 0; padding: 5px 9px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc; cursor: pointer; font-size: 11.5px; font-weight: 600; color: #1e293b; }
+  .bar button.on { background: #143c4d; color: #fff; border-color: #143c4d; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 6px; font-size: 11px; color: #334155; align-items: center; }
+  .legend i { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border-radius: 50%; color: #fff; font-style: normal; font-size: 9.5px; font-weight: 700; margin-right: 2px; }
+  .pin-marker { width: 24px; height: 24px; border-radius: 50%; border: 2.5px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.45); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 800; }
+  .maplibregl-popup-content { font-size: 12.5px; max-width: 300px; border-radius: 10px; padding: 12px; }
+  .maplibregl-popup-content h3 { margin: 0 0 5px; font-size: 14px; color: #0f172a; }
+  .maplibregl-popup-content table { border-collapse: collapse; width: 100%; }
+  .maplibregl-popup-content td { border-top: 1px solid #eee; padding: 3px 4px; vertical-align: top; line-height: 1.4; }
+  .maplibregl-popup-content td:first-child { color: #64748b; white-space: nowrap; font-weight: 600; }
+  .pop-sv-link { display: block; text-align: center; margin-top: 8px; padding: 7px 10px; border-radius: 6px; background: #0f1c30; color: #fff !important; font-weight: 700; font-size: 12px; text-decoration: none; }
+  @media (max-width: 600px) {
+    .bar { max-width: calc(100vw - 56px) !important; padding: 7px 9px; font-size: 11.5px; }
+    .bar button { padding: 4px 7px !important; font-size: 11px !important; }
+    .legend { font-size: 10px !important; gap: 3px 6px !important; }
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="bar">
+  <b>뉴질랜드 우리 집 비교 (28건)</b><br>
+  <button id="btn-nz" class="on">벨몬트(학교)</button><button id="btn-takapuna">타카푸나</button><button id="btn-westgate">웨스트게이트</button><button id="btn-photo" class="on">위성사진</button>
+  <div class="legend">
+    <span><i style="background:#2f9e44">학</i>학교</span>
+    <span><i style="background:#00b4d8">벨</i>벨몬트2차(5)</span>
+    <span><i style="background:#1971c2">1</i>권역1(5)</span>
+    <span><i style="background:#7048e8">타</i>타카푸나(11)</span>
+    <span><i style="background:#e8590c">2</i>하우라키·데본(6)</span>
+    <span><i style="background:#d6336c">유</i>유학원(1)</span>
+  </div>
+</div>
+<script>
+const views = {
+  nz: { center:[174.7918802, -36.8065311], zoom:14.8, pitch:45, bearing:0 },
+  takapuna: { center:[174.7665, -36.7895], zoom:14.6, pitch:45, bearing:0 },
+  westgate: { center:[174.6101836, -36.8213672], zoom:14.2, pitch:40, bearing:0 }
+};
+
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://tiles.openfreemap.org/styles/liberty',
+  ...views.nz,
+  antialias: true
+});
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+
+const placeMarkers = new Map();
+let photo = true;
+
+map.on('load', () => {
+  const layers = map.getStyle().layers;
+  const labelId = (layers.find(l => l.type === 'symbol' && l.layout && l.layout['text-field']) || {}).id;
+  if (!map.getLayer('eh-building-3d')) {
+    map.addLayer({
+      id: 'eh-building-3d', source: 'openmaptiles', 'source-layer': 'building', type: 'fill-extrusion', minzoom: 14,
+      paint: {
+        'fill-extrusion-color': '#d9d4cc',
+        'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 8],
+        'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+        'fill-extrusion-opacity': 0.35
+      }
+    }, labelId);
+  }
+  map.addSource('photo-world', {
+    type: 'raster', tileSize: 256,
+    tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+    attribution: '항공사진 © Esri, Maxar'
+  });
+  map.addLayer({ id: 'photo-world', type: 'raster', source: 'photo-world', layout: { visibility: 'visible' } });
+  map.getStyle().layers.filter(l => l.type === 'fill-extrusion' || l.type === 'symbol').forEach(l => map.moveLayer(l.id));
+
+  for (const p of nzPlaces) {
+    const el = document.createElement('div');
+    el.className = 'pin-marker';
+    el.style.background = p.color || '#1971c2';
+    el.textContent = p.glyph || '';
+    el.title = p.name;
+    const rows = Object.entries(p.info).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+    const svUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${p.lat},${p.lng}`;
+    const popupHtml = `<h3>${p.name}</h3><table>${rows}</table><a class="pop-sv-link" href="${svUrl}" target="_blank" rel="noopener">📱 구글 스트리트뷰(로드뷰) 열기 ↗</a>`;
+    const marker = new maplibregl.Marker({ element: el })
+      .setLngLat([p.lng, p.lat])
+      .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(popupHtml))
+      .addTo(map);
+    if (p.id) placeMarkers.set(p.id, { marker, p });
+    el.addEventListener('click', () => window.dispatchEvent(new CustomEvent('eh-place-selected', { detail: p.id })));
+  }
+  window.dispatchEvent(new CustomEvent('eh-map-ready'));
+});
+
+function setActive(id) {
+  ['btn-nz', 'btn-takapuna', 'btn-westgate'].forEach(k => document.getElementById(k)?.classList.toggle('on', k === id));
+}
+document.getElementById('btn-nz').onclick = () => { setActive('btn-nz'); map.flyTo({ ...views.nz, duration: 1200 }); };
+document.getElementById('btn-takapuna').onclick = () => { setActive('btn-takapuna'); map.flyTo({ ...views.takapuna, duration: 1200 }); };
+document.getElementById('btn-westgate').onclick = () => { setActive('btn-westgate'); map.flyTo({ ...views.westgate, duration: 1200 }); };
+document.getElementById('btn-photo').onclick = () => {
+  photo = !photo;
+  document.getElementById('btn-photo').classList.toggle('on', photo);
+  map.setLayoutProperty('photo-world', 'visibility', photo ? 'visible' : 'none');
+  map.setPaintProperty('eh-building-3d', 'fill-extrusion-opacity', photo ? 0.35 : 0.85);
+};
+
+window.addEventListener('eh-focus-place', e => {
+  const entry = placeMarkers.get(e.detail);
+  if (!entry) return;
+  for (const x of placeMarkers.values()) x.marker.getPopup().remove();
+  entry.marker.togglePopup();
+  map.flyTo({ center: [entry.p.lng, entry.p.lat], zoom: entry.p.type === 'area' ? 13.8 : 16.8, pitch: 45, duration: 1000 });
+  window.dispatchEvent(new CustomEvent('eh-place-focused', { detail: e.detail }));
+});
+
+window.addEventListener('eh-nz-overview', () => {
+  for (const x of placeMarkers.values()) x.marker.getPopup().remove();
+  map.fitBounds([[174.59, -36.835], [174.815, -36.78]], { padding: 40, duration: 1000, pitch: 0, bearing: 0 });
+});
+
+window.addEventListener('eh-open-streetview', e => {
+  const id = e.detail;
+  const entry = placeMarkers.get(id);
+  const lat = entry ? entry.p.lat : -36.8065311;
+  const lng = entry ? entry.p.lng : 174.7918802;
+  window.open(`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`, '_blank', 'noopener');
+});
+window.addEventListener('eh-place-focused', () => { setTimeout(() => map.resize(), 150); });
+window.addEventListener('resize', () => { setTimeout(() => map.resize(), 100); });
+</script>
+<script src="housing-dashboard.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('btn-housing');
+    if (btn && btn.getAttribute('aria-expanded') === 'false') btn.click();
+  });
+</script>
+</body>
+</html>

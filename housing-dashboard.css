@@ -1,0 +1,50 @@
+:root{--panel-width:390px}
+body.with-housing gmp-map-3d,body.with-housing #map{right:var(--panel-width);width:calc(100% - var(--panel-width))}
+.housing-panel{position:absolute;inset:0 0 0 auto;width:var(--panel-width);z-index:3;background:#f3f5f7;overflow-y:auto;box-shadow:-3px 0 18px #10202b20;color:#182733;font-family:'Malgun Gothic',sans-serif;box-sizing:border-box}
+.housing-panel *{box-sizing:border-box}.housing-panel button,.housing-panel a{font:inherit}.housing-head{padding:27px 24px 22px;background:#143c4d;color:#fff}.eyebrow{font-size:10px;letter-spacing:1.6px;font-weight:700;opacity:.75}.housing-head h1{font-size:25px;letter-spacing:-1.4px;margin:9px 0}.housing-head p{font-size:12px;opacity:.8;margin:0;line-height:1.7}.housing-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:22px}.housing-stats div{border-left:1px solid #ffffff30;padding-left:16px}.housing-stats div:first-child{border:0;padding:0}.housing-stats b{font-size:25px;display:block}.housing-stats span{font-size:10px;opacity:.75}.school-card{margin:17px 16px;padding:18px;border:1px solid #c9ded3;background:#edf6ef;border-radius:12px}.school-card h2{font-size:17px;margin:7px 0}.school-card p{font-size:11px;color:#52625b;line-height:1.6;margin:5px 0 12px}.school-card button{border:0;border-radius:6px;background:#2f7655;color:white;padding:7px 10px;cursor:pointer;font-size:11px}.school-card a{font-size:10px;color:#2f7655;margin-left:9px}.housing-toolbar{display:flex;justify-content:space-between;align-items:center;padding:0 19px 12px;font-size:13px}.housing-toolbar button{border:0;background:transparent;padding:6px 10px;color:#697b86;cursor:pointer;font-size:11px}.housing-toolbar .active{background:#173f50;color:white;border-radius:6px}.housing-list{padding:0 16px;display:grid;gap:12px}.home-card{background:white;border:1px solid #e0e6ea;border-radius:12px;padding:16px}.home-card.selected{border:2px solid #257a88;padding:15px;box-shadow:0 2px 8px #24788820}.home-top{display:flex;justify-content:space-between;align-items:center}.home-status{font-size:10px;padding:4px 7px;border-radius:4px;color:#7a623b;background:#f7f0e5}.home-status.current{background:#e6f2e9;color:#327348}.save-home{border:0;background:none;color:#bd850b;font-size:23px!important;cursor:pointer;line-height:1}.home-name{border:0;background:none;text-align:left;font-size:15px!important;font-weight:700!important;line-height:1.5;display:block;padding:10px 0;cursor:pointer;color:#142f40;width:100%}.home-price{font-size:23px;font-weight:bold;letter-spacing:-.7px}.home-price small{font-size:11px;font-weight:normal;color:#75818b;letter-spacing:0}.home-month{font-size:10px;color:#7b8792;margin:4px 0 12px}.home-facts{display:flex;gap:7px;font-size:10px}.home-facts span{background:#f1f4f6;padding:4px 8px;border-radius:4px}.home-distance{font-size:11px;color:#276f77;margin:12px 0 7px}.home-review,.home-location{font-size:11px;line-height:1.7;color:#737d86;margin:5px 0}.home-location{color:#996a33}.home-actions{border-top:1px solid #edf0f2;margin-top:12px;padding-top:11px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.home-actions button{border:0;background:#edf4f6;color:#225c6b;font-size:10px;padding:6px 8px;border-radius:5px;cursor:pointer}.home-actions a{font-size:10px;color:#536c7c;text-decoration:none}.housing-foot{padding:18px 20px 25px;color:#7a8790;font-size:10px;line-height:1.8}.housing-empty{font-size:12px;color:#7a8790;padding:15px}
+@media(max-width:760px){:root{--panel-width:340px}.bar{max-width:260px!important;font-size:12px!important}}
+@media(max-width:600px){body.with-housing gmp-map-3d,body.with-housing #map{width:100%;right:0;bottom:48%;height:52%}.housing-panel{inset:52% 0 0;width:100%;border-radius:18px 18px 0 0;box-shadow:0 -3px 20px #10202b30}.housing-head{padding:18px 20px}.housing-head h1{font-size:22px}.housing-stats{margin-top:12px}.school-card{margin-top:13px}.bar{top:8px!important;left:8px!important;max-width:270px!important}}
+
+@media(max-width:600px){.bar .note{display:none}.bar .legend{font-size:11px}.bar button{padding:5px 8px!important}}
+
+.housing-panel[hidden]{display:none}.housing-head{position:relative}.housing-close{position:absolute;right:15px;top:10px;color:#d9e9ec;background:transparent;border:0;font-size:11px!important;cursor:pointer;padding:5px}.housing-head>.eyebrow{padding-top:7px}#btn-housing{color:#224b58;border-color:#b8ccd0;background:#edf5f5}
+
+.source-filter{display:flex;align-items:center;justify-content:space-between;padding:0 19px 13px;font-size:11px;color:#526876}.source-filter select{padding:7px 10px;border:1px solid #d2dde2;border-radius:6px;background:white;color:#224451}.home-source{font-size:10px;line-height:1.6;color:#2a7380;margin:9px 0 0;font-weight:bold}
+
+.school-card.selected{border:2px solid #2f7655;padding:17px}.school-feedback{color:#2f7655!important;font-size:11px!important;font-weight:700}.school-feedback:empty{display:none}.agency-card{border-left:4px solid #d6336c}.agency-card.selected{border-color:#d6336c}.agency-card .home-source{color:#b12b59}.pin.home.agency{background:#d6336c}
+
+.home-walk{font-size:13px;color:#245d50;font-weight:700;margin:9px 0}.home-walk small{display:block;font-size:10px;font-weight:400;color:#7a8790;margin-top:4px}
+
+.westgate-card{margin:0 16px 14px;padding:16px;border:1px solid #b9d5da;border-left:4px solid #0b7285;background:#f0f7f8;border-radius:10px}.westgate-card h2{font-size:17px;margin:8px 0}.westgate-card h2 small{font-size:11px;font-weight:400}.westgate-card p{font-size:11px;line-height:1.7;color:#547078;margin:6px 0}.westgate-card button{border:1px solid #b7d2d8;background:white;color:#0b6475;border-radius:5px;padding:6px 8px;font-size:11px;cursor:pointer;margin:7px 6px 0 0}
+.portal-card{margin:0 16px 18px;padding:16px;border:1px solid #cfd8dc;border-left:4px solid #143c4d;background:#fff;border-radius:10px}
+.portal-card h2{font-size:15px;margin:6px 0 8px;color:#143c4d}
+.portal-desc{font-size:11px;line-height:1.6;color:#455a64;margin:0 0 10px}
+.portal-group{margin-top:9px;font-size:11px}
+.portal-group b{display:block;color:#1e3a4c;margin-bottom:5px}
+.portal-links{display:flex;flex-wrap:wrap;gap:5px}
+.portal-links a{background:#edf3f6;color:#143c4d;text-decoration:none;padding:4px 8px;border-radius:5px;font-size:10px;font-weight:600;border:1px solid #d5e2e8}
+.portal-links a:hover{background:#143c4d;color:#fff}
+.criteria-box{margin-top:12px;border-top:1px solid #e4ecef;padding-top:10px;font-size:11px;color:#37474f}
+.criteria-box summary{cursor:pointer;font-weight:700;color:#143c4d;font-size:11px}
+.criteria-box ol{margin:8px 0 0;padding-left:18px;line-height:1.65;font-size:10.5px}
+.new-card{border-left:4px solid #1971c2}
+.new-card .home-source{color:#1864ab}
+.zone1-card{border-left:4px solid #1971c2}
+.zone1-card.selected{border-color:#1971c2}
+.zone1-card .home-source{color:#1864ab}
+.zone2-card{border-left:4px solid #e8590c}
+.zone2-card.selected{border-color:#e8590c}
+.zone2-card .home-source{color:#d9480f}
+.taka-card{border-left:4px solid #7048e8}
+.taka-card.selected{border-color:#7048e8}
+.taka-card .home-source{color:#5f3dc4}
+.belmont2-card{border-left:5px solid #00b4d8;background:#f8fdff}
+.belmont2-card.selected{border:2px solid #00b4d8;background:#f0faff}
+.belmont2-card .home-source{color:#0077b6;font-weight:800}
+.home-actions button.btn-sv{background:#0f1c30;color:#fff;font-weight:700}
+.home-actions button.btn-sv:hover{background:#1e3a5f}
+.krw-inline{font-size:13.5px;font-weight:700;color:#0f4c75;letter-spacing:-0.3px}
+.home-diff{font-size:11px;font-weight:700;margin:3px 0 2px;color:#0f766e}
+.home-diff.more{color:#b45309}
+.area-badge{background:#e3f2fd!important;color:#0d47a1!important;font-weight:700;border:1px solid #bbdefb}
+.home-facts{flex-wrap:wrap}
